@@ -1,5 +1,3 @@
-from functools import wraps
-
 def ireduce(func, sequence, initial=None):
     """
     Make an iterator that apply a function of two arguments cumulatively
@@ -26,8 +24,9 @@ def ireduce(func, sequence, initial=None):
     def ireduce_generator(accumulator):
         try:
             temp = next(iterator)
-
-            yield func(accumulator, temp)
+            yield accumulator
+            accumulator = func(accumulator, temp)
+            yield accumulator
         except StopIteration:
             yield accumulator
 

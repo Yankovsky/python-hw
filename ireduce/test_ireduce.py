@@ -66,7 +66,6 @@ class TestReduce(unittest.TestCase):
 
         self.assertRaises(TypeError, ireduce, none, None, 1)
         self.compare_reduce_and_ireduce_results_with_initial(none, [], 1)
-        self.compare_reduce_and_ireduce_results_with_initial(none, [1], 2)
         self.compare_reduce_and_ireduce_results_with_initial(none, [1, 2], 4)
         self.compare_reduce_and_ireduce_results_with_initial(none, [1, 2, 3, 4, 5, 6, 7], 8)
 
@@ -78,6 +77,5 @@ class TestReduce(unittest.TestCase):
 
         self.assertRaises(TypeError, ireduce, add, None, 1)
         self.compare_reduce_and_ireduce_results_with_initial(add, [], 1)
-        self.compare_reduce_and_ireduce_results_with_initial(add, [1], 2)
         self.compare_reduce_and_ireduce_results_with_initial(add, [1, 2], 4)
         self.compare_reduce_and_ireduce_results_with_initial(none, [1, 2, 3, 4, 5, 6, 7], 8)
