@@ -1,10 +1,18 @@
 class Xrange:
     """
-    Very basic xrange.
+    Xrange reimplementation
     Currently supports only int type for start, stop and step.
     """
+    def __init__(self, *args):
+        if len(args) == 1:
+            start, stop, step = 0, args[0], 1
+        elif len(args) == 2:
+            start, stop, step = args[0], args[1], 1
+        elif len(args) == 3:
+            start, stop, step = args
+        else:
+            raise TypeError("Xrange() requires 1-3 int arguments")
 
-    def __init__(self, start, stop, step=1):
         if not all(isinstance(x, (int, long)) for x in [start, stop, step]):
             raise TypeError("integer argument expected, got float")
 
@@ -14,37 +22,44 @@ class Xrange:
         if not step:
             raise ValueError("Xrange() arg 3 must not be zero")
 
+        if step < 0:
+            stop = min(stop, start)
+        else:
+            stop = max(stop, start)
+
         self._start = start
         self._stop = stop
         self._step = step
+        q, r = divmod((stop - start), step)
+        if not r:
+            self._len = q
+        else:
+            self._len = q + 1
+
+
 
     def __repr__(self):
-        return '%s(%r, %r, %r)' % (self.__class__.__name__,
+        return "%s(%r, %r, %r)" % (self.__class__.__name__,
                                    self._start, self._stop, self._step)
 
     def __str__(self):
-        return '%s(%r, %r, %r)' % (self.__class__.__name__,
+        return "%s(%r, %r, %r)" % (self.__class__.__name__,
                                    self._start, self._stop, self._step)
 
     def __len__(self):
-        if self._start == self._stop:
-            return 0
-        return max(1, (self._stop - self._start) / self._step)
-
-    def _len(self):
-        return len(self)
+        return self._len
 
     def __getitem__(self, index):
         if isinstance(index, slice):
-            start, stop, step = index.indices(self._len())
-            return Xrange(self._value_by_index(start), self._value_by_index(stop), step * self._step)
+            start, stop, step = index.indices(self._len)
+            return list(Xrange(self._value_by_index(start), self._value_by_index(stop), step * self._step))
         elif isinstance(index, (int, long)):
             if index < 0:
-                index = self._len() - index
+                index = self._len - index
             else:
                 index = index
 
-            if index < 0 or index >= self._len():
+            if index < 0 or index >= self._len:
                 raise IndexError("Xrange object index out of range")
 
             return self._value_by_index(index)
