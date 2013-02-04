@@ -18,7 +18,8 @@ class TestCurryDecorator(unittest.TestCase):
         self.assertEqual("Hi, Steve! Stay cool.", message("Hi", "Steve")("Stay cool"))
         self.assertEqual("Good night, Bill! Try Debian.", message("Good night")("Bill", "Try Debian"))
         self.assertEqual("Good morning, Linus! Try win phone 8.", message("Good morning")("Linus")("Try win phone 8"))
-        self.assertEqual("As you wish, Palpatine! But please, don't use lighting on my son", message()("As you wish")()("Palpatine")()("But please, don't use lighting on my son"))
+        self.assertEqual("As you wish, Palpatine! But please, don't use lighting on my son.", message()("As you wish")()("Palpatine")()("But please, don't use lighting on my son"))
+        self.assertRaises(None, message, "Pysh Pysh", "ololo", "Ya voditel nlo", "voditel nlo shouldn't be here")
 
     def test_curry_varargs(self):
         @curry
@@ -51,6 +52,7 @@ class TestCurryDecorator(unittest.TestCase):
         self.assertEqual(14, func_with_defaults(8))
         self.assertEqual(28, func_with_defaults(8, 16))
         self.assertEqual(56, func_with_defaults(8, 16, 32))
+        self.assertRaises(None, func_with_defaults, 8, 16, 32, 64)
 
     def test_curry_all_together_now(self):
         @curry
