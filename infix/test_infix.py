@@ -7,6 +7,7 @@ class TestInfix(unittest.TestCase):
         def x(a, b):
             return a * b
 
+        self.assertEqual(8, 2 | x | 4)
 
         @Infix
         def isa(a, b):

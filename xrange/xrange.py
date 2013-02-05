@@ -3,6 +3,7 @@ class Xrange:
     Xrange reimplementation
     Currently supports only int type for start, stop and step.
     """
+
     def __init__(self, *args):
         if len(args) == 1:
             start, stop, step = 0, args[0], 1
@@ -35,8 +36,6 @@ class Xrange:
             self._len = q
         else:
             self._len = q + 1
-
-
 
     def __repr__(self):
         return "%s(%r, %r, %r)" % (self.__class__.__name__,
