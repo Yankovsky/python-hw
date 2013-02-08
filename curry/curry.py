@@ -1,28 +1,24 @@
 from functools import wraps
 import inspect
 
-def curry(func):
+def curry(func, *args, **kwargs):
+    """
+    Func evaluated as soon as last of fixed normal arg passed.
+    Func with no args works well with this curry decorator.
+    """
     @wraps(func)
-    def wrapper(*args, **kwargs):
-        argspec = inspect.getargspec(func)
-        if len(args) == len(argspec.args):
-            return func(*args)
+    def curry_inner(*inner_args, **inner_kwargs):
+        argspec = inspect.getargspec(func) #args, varargs, varkw, defaults
+        accumulated_args = args + inner_args
+        default_args_len = 0
+        if argspec.defaults is not None:
+            default_args_len = len(argspec.defaults)
+        accumulated_kwargs = dict(kwargs, **inner_kwargs)
+        accumulated_args_len = len(accumulated_args) + default_args_len
+        func_args_len = len(argspec.args)
+        if accumulated_args_len >= func_args_len:
+            return func(*accumulated_args, **accumulated_kwargs)
         else:
-            return lambda args: curry(x, )
+            return curry(func, *accumulated_args, **accumulated_kwargs)
 
-    return wrapper
-
-
-# functional programming (not working in jython, use the "curry" recipe! )
-def curry(f, x):
-    def curried_function(*args, **kw):
-        return f(*((x,) + args), **kw)
-
-    return curried_function
-
-curry = Infix(curry)
-
-add5 = operator.add | curry | 5
-print add5(6)
-# => 11
-## end of http://code.activestate.com/recipes/384122/ }}}
+    return curry_inner
