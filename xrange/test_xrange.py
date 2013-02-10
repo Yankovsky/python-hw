@@ -58,6 +58,12 @@ class TestXrange(unittest.TestCase):
                 # don"t care about step not equal zero exc
                 pass
 
+    def test_xrange_contains_not_integer_passed(self):
+        my_xrange = Xrange(1, 10, 2)
+        self.assertRaises(TypeError, my_xrange.__contains__, "bad value")
+        self.assertRaises(TypeError, my_xrange.__contains__, 2.2)
+        self.assertRaises(TypeError, my_xrange.__contains__, Xrange(1, 5, 1))
+
     def test_xrange_slice(self):
         for i in range(1, 1000):
             try:

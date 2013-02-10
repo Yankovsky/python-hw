@@ -15,7 +15,7 @@ class Xrange:
             raise TypeError("Xrange() requires 1-3 int arguments")
 
         if not all(isinstance(x, (int, long)) for x in [start, stop, step]):
-            raise TypeError("integer argument expected, got float")
+            raise TypeError("integer arguments expected")
 
         if start < stop and step < 0 or start > stop and step > 0:
             stop = start
@@ -69,6 +69,8 @@ class Xrange:
         return self._start + self._step * i
 
     def __contains__(self, value):
+        if not isinstance(value, (int, long)):
+            raise TypeError("value passed to contains method should be integer")
         quotient, remainder = divmod(value - self._start, self._step)
         return remainder == 0 and 0 <= quotient < self._len
 
