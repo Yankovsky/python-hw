@@ -101,6 +101,34 @@ class TestLazyDecorator(unittest.TestCase):
         self.assertEqual("dummy", dummy.__name__)
         self.assertEqual("Dummy function", dummy.__doc__)
 
+    def test_lazy_dec_called_before_func(self):
+        global dec_executed
+        global func_executed
+        dec_executed = False
+        func_executed = False
+
+        @lazy
+        def dec(func):
+            @wraps(func)
+            def wrapper():
+                global dec_executed
+                global func_executed
+                self.assertEqual(False, dec_executed)
+                self.assertEqual(False, func_executed)
+                dec_executed = True
+
+            return wrapper
+
+        @dec
+        def dummy():
+            global dec_executed
+            global func_executed
+            self.assertEqual(True, dec_executed)
+            self.assertEqual(False, func_executed)
+            func_executed = True
+
+        dummy()
+
     def test_lazy_maker_without_params_and_without_args(self):
         global dec_maker_executed
         global dec_executed
@@ -274,3 +302,34 @@ class TestLazyDecorator(unittest.TestCase):
         self.assertEqual("Sample decorators maker", dec_maker.__doc__)
         self.assertEqual("dummy", dummy.__name__)
         self.assertEqual("Dummy function", dummy.__doc__)
+
+    def test_lazy_maker_dec_called_before_func(self):
+        global dec_executed
+        global func_executed
+        dec_executed = False
+        func_executed = False
+
+        @lazy_maker
+        def dec_maker(*dec_args, **dec_kwargs):
+            def dec(func):
+                @wraps(func)
+                def wrapper(*args, **kwargs):
+                    global dec_executed
+                    global func_executed
+                    self.assertEqual(False, dec_executed)
+                    self.assertEqual(False, func_executed)
+                    dec_executed = True
+
+                return wrapper
+
+            return dec
+
+        @dec_maker(1, 2, a=3, b=4)
+        def dummy():
+            global dec_executed
+            global func_executed
+            self.assertEqual(True, dec_executed)
+            self.assertEqual(False, func_executed)
+            func_executed = True
+
+        dummy()
